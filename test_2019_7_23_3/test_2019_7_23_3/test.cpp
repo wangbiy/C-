@@ -119,6 +119,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 int main()
 {
 	int array[] = { 1, 2, 3, 4, 5 };
@@ -127,6 +128,20 @@ int main()
 		e *= 2;
 	for (auto e:array)
 	cout << e << " ";
+	system("pause");
+	return 0;
+}
+#endif
+int main()
+{
+	int a = 10;
+	auto pa1 = &a;
+	auto* pa2 = &a;
+	auto& pa3 = a;
+	cout << typeid(pa1).name() << endl;
+	cout << typeid(pa2).name() << endl;//两个的类型都是int*,说明加不加*是一样的
+	cout << "*************************" << endl;
+	cout << typeid(pa3).name() << endl;//类型为int,如果不加&，就会成为int*类型
 	system("pause");
 	return 0;
 }
