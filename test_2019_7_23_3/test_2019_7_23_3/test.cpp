@@ -132,6 +132,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 int main()
 {
 	int a = 10;
@@ -142,6 +143,25 @@ int main()
 	cout << typeid(pa2).name() << endl;//两个的类型都是int*,说明加不加*是一样的
 	cout << "*************************" << endl;
 	cout << typeid(pa3).name() << endl;//类型为int,如果不加&，就会成为int*类型
+	system("pause");
+	return 0;
+}
+#endif
+void test(int a)
+{
+	cout << "test(int)" << endl;
+}
+void test(int* a)
+{
+	cout << "test(int*)" << endl;
+}
+int main()
+{
+	test(0);
+	test(NULL);
+	//这两个都是调用的第一个函数，因为这时将NULL当做宏定义，即#define NULL 0
+	//应当用test(nullptr)
+	test(nullptr);
 	system("pause");
 	return 0;
 }
