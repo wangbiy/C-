@@ -211,7 +211,7 @@ int main()
 	return 0;
 }
 #endif
-#if 0
+#if 1
 class String
 {
 public:
@@ -239,6 +239,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 class Time
 {
 public:
@@ -269,4 +270,5 @@ int main()
 	Date d;
 	return 0;
 }
+#endif
 
