@@ -70,7 +70,7 @@ Date& Date:: operator--()//前置
 	_day -= 1;
 	return *this;
 }
-Date Date:: operator--(int)//后置
+Date Date:: operator--(int)//后置，后面的参数不需要进行传递
 {
 	Date tmp(*this);
 	_day -= 1;
