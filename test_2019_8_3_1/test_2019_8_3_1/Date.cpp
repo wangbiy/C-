@@ -114,6 +114,18 @@ bool Date::operator>=(const Date& d)
 {
 	return *this>d || *this == d;
 }
+Date Date:: operator+(int day)//不能改变自身的值，因此构造tmp，保存当前值
+{
+	Date tmp(*this);
+	tmp._day += day;
+	return tmp;
+}
+Date Date:: operator-(int day)//不能改变自身的值，因此构造tmp，保存当前值
+{
+	Date tmp(*this);
+	tmp._day -= day;
+	return tmp;
+}
 void Date:: show()
 {
 	cout << _year << " " << _month << " " << _day << endl;
@@ -140,6 +152,10 @@ int main()
 	d1.show();
 	--d1;
 	d1.show();
+	Date d3 = d2 + 10;
+	d3.show();
+	Date d4 = d2 - 3;
+	d4.show();
 	return 0;
 }
 	

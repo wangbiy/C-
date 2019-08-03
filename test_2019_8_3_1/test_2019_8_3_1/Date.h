@@ -22,6 +22,8 @@ public:
 	bool operator>(const Date& d);
 	bool operator<=(const Date& d);
 	bool operator>=(const Date& d);
+	Date operator+(int day);
+	Date operator-(int day);
 	void show();
 private:
 	int _year;
