@@ -86,6 +86,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 //自定义类型的空间
 class Test
 {
@@ -117,5 +118,233 @@ int main()
 {
 	Test t;
 	t.TestNewDelete();
+	return 0;
+}
+#endif
+#include <crtdbg.h>
+#if 0
+//如果没有配合使用，代码会出现什么情况？
+//结论：对于内置类型没有匹配没有影响
+void testfunc()
+{
+	int* p1 = (int*)malloc(sizeof(int));
+	delete p1;
+	int* p2 = (int*)malloc(sizeof(int));
+	delete[]p2;
+	int* p3 = new int;
+	free(p3);
+	int* p4 = new int;
+	delete[]p4;
+	int* p5 = new int[10];
+	free(p5);
+	int* p6 = new int[10];
+	delete p6;
+}
+int main()
+{
+	testfunc();
+	_CrtDumpMemoryLeaks();//进行内存泄漏检测,但是它不能检测出哪里发生了内存泄漏
+	//可以使用第三方库，例如vld内存检测工具
+	return 0;
+}
+#endif
+#if 0
+class Test
+{
+public:
+	Test()
+	{
+		ptr = new int;
+	}
+	~Test()
+	{
+		delete ptr;
+		ptr = nullptr;
+	}
+private:
+	int* ptr;
+};
+void testfunc()
+{
+	//代码崩溃,malloc没有构造对象，无法使用delete调用析构函数来释放
+	/*Test* p1 = (Test*)malloc(sizeof(Test));
+	delete p1;*/
+	//代码崩溃,因为malloc没有调用构造函数，而delete要调用析构函数，而这时候没有对象，无法释放
+	Test* p2 = (Test*)malloc(sizeof(Test));
+	delete[]p2;
+	//p3在栈上，Test在堆上，堆里面ptr申请的空间，释放的是ptr申请的空间，因此存在内存泄漏
+	Test* p3 = new Test;
+	free(p3);//free不会调用析构函数
+	//代码崩溃
+	Test* p4 = new Test;
+	delete[]p4;
+	//代码崩溃，内存泄漏
+	Test* p5 = new Test[10];
+	free(p5);
+	//代码崩溃
+	Test* p6 = new Test[10];
+	delete p6;
+}
+int main()
+{
+	testfunc();
+	return 0;
+}
+#endif
+#if 0
+class Test
+{
+public:
+	Test()
+	{
+		cout << "Test()" << endl;
+	}
+	~Test()
+	{
+		cout << "~Test()" << this <<endl;
+	}
+private:
+	int* data;
+};
+void testfunc()
+{
+	//代码没有问题，因为类里面没有管理资源
+	Test* p1 = (Test*)malloc(sizeof(Test));
+	delete p1;
+	//代码崩溃
+	Test* p2 = (Test*)malloc(sizeof(Test));
+	delete[]p2;
+	//没有影响，因为类中没有管理资源	
+	Test* p3 = new Test;
+	free(p3);
+	//代码崩溃
+	Test* p4 = new Test;
+	delete[]p4;
+	//代码崩溃
+	Test* p5 = new Test[10];
+	free(p5);
+	//代码崩溃
+	Test* p6 = new Test[10];
+	delete p6;
+}
+
+int main()
+{
+	testfunc();
+	return 0;
+}
+#endif
+#if 0
+class Test
+{
+public:
+	Test()
+	{
+		cout << "Test()" << endl;
+	}
+private:
+	int* data;
+};
+void testfunc()
+{
+	Test* p1 = (Test*)malloc(sizeof(Test));
+	delete p1;
+
+	Test* p2 = (Test*)malloc(sizeof(Test));
+	delete[]p2;
+
+	Test* p3 = new Test;
+	free(p3);
+
+	Test* p4 = new Test;
+	delete[]p4;
+
+	Test* p5 = new Test[10];
+	free(p5);
+
+	Test* p6 = new Test[10];
+	delete p6;
+}
+int main()
+{
+	testfunc();
+	return 0;
+}
+#endif
+#if 0
+class Test
+{
+public:
+	Test()
+	{
+		cout << "Test()" << endl;
+	}
+	~Test()
+	{
+		cout << "~Test()" << this << endl;
+	}
+private:
+	int* data;
+};
+int main()
+{
+	Test* ptr = new Test;
+	delete ptr;
+	return 0;
+}
+#endif
+#if 0
+void *__CRTDECL operator new(size_t count) 
+{
+	// try to allocate size bytes
+	void *p;
+	while ((p = malloc(count)) == 0)
+	if (_callnewh(count) == 0)
+	{
+		// report no memory
+		// 如果申请内存失败了，这里会抛出bad_alloc 类型异常
+		static const std::bad_alloc nomem;
+		_RAISE(nomem);
+	}
+	return (p);
+}
+#endif
+#if 0
+void operator delete(void *pUserData) {
+	_CrtMemBlockHeader * pHead;
+	RTCCALLBACK(_RTC_Free_hook, (pUserData, 0));
+	if (pUserData == NULL)
+		return;
+	_mlock(_HEAP_LOCK); /* block other threads */
+	__TRY
+		/* get a pointer to memory block header */
+		pHead = pHdr(pUserData);
+	/* verify block type */
+	_ASSERTE(_BLOCK_TYPE_IS_VALID(pHead->nBlockUse));
+	_free_dbg(pUserData, pHead->nBlockUse);
+	__FINALLY
+		_munlock(_HEAP_LOCK); /* release other threads */
+	__END_TRY_FINALLY
+		return;
+}
+#endif
+class Test
+{
+public:
+	Test()
+	{
+		cout << "Test()" <<this << endl;
+	}
+	~Test()
+	{
+		cout << "~Test()" << this << endl;
+	}
+private:
+	int* data;
+};
+int main()
+{
+	Test* ptr = new Test[];
+	delete[] ptr;
 	return 0;
 }
