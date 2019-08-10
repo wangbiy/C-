@@ -328,6 +328,7 @@ void operator delete(void *pUserData) {
 		return;
 }
 #endif
+#if 0
 class Test
 {
 public:
@@ -346,5 +347,259 @@ int main()
 {
 	Test* ptr = new Test[];
 	delete[] ptr;
+	return 0;
+}
+#endif
+#if 0
+class Test
+{
+public:
+	Test()
+		:_data(0)
+	{
+		cout << "Test():" << this << endl;
+	}
+	~Test()
+	{
+		cout << "~Test():" << this << endl;
+	}
+private:
+	int _data;
+};
+int main()
+{
+	Test* pt = (Test*)malloc(sizeof(Test));
+	new(pt)Test;//如果Test类的构造函数有参数时，此时应该传参
+	return 0;
+}
+#endif
+#if 0
+//设计一个类，只能在堆上申请空间
+class HeapOnly
+{
+public:
+	static HeapOnly* GetObject()
+	{
+		return new HeapOnly;
+	}
+private:
+	HeapOnly()
+	{}
+	//C++98
+	//HeapOnly(const HeapOnly&);//拷贝构造函数,必须是私有的，如果不是私有的，在类外用户可能会定义拷贝构造函数，例如HeapOnly* o(*p),是在栈上申请空间因此不能实现只能在堆上申请空间的要求，所以必须是私有的
+	//C++11
+	HeapOnly(const HeapOnly&) = delete;//告诉编译器，删除拷贝构造函数
+};
+int main()
+{
+	HeapOnly* p = HeapOnly::GetObject();
+	//HeapOnly* o(*p);//在栈上申请的空间，因此要将拷贝构造函数改成私有的
+	return 0;
+}
+#endif
+#if 0
+//只能在栈上申请空间
+class StackOnly
+{
+public:
+	static StackOnly GetObject()
+	{
+		return StackOnly();
+	}
+private:
+	StackOnly()//将构造函数设为私有的
+	{
+		cout << "StackOnly():" << this << endl;
+	}
+};
+int main()
+{
+	//StackOnly* s = new StackOnly;//不能实现
+	//StackOnly::GetObject();
+	StackOnly s = StackOnly::GetObject();//相当于StackOnly s(StackOnly::GetObject()),即拷贝构造函数
+	//但这种方法不太好，在编译器没有优化的情况下，创建了3个对象
+	return 0;
+}
+#endif
+#if 0
+class StackOnly
+{
+public:
+	StackOnly()
+	{}
+private:
+	void* operator new(size_t size);
+	void operator delete(void* p);
+};
+int main()
+{
+	//StackOnly* = new StackOnly;//错误
+	//StackOnly* s=(StackOnly*)malloc(sizeof(StackOnly)); 
+	//new(s)StackOnly;//错误，因为屏蔽了operator new，实际也将定位new屏蔽掉
+	/*StackOnly s;*/
+	return 0;
+}
+#endif
+#if 0
+//防止被拷贝，只要将拷贝构造函数和赋值运算符重载屏蔽
+class Test
+{
+public:
+	Test()
+	{}
+public:
+	//Test(const Test&);
+	//Test& operator=(const Test&);
+	//C++98
+	Test(const Test&)=delete;
+	Test& operator=(const Test&)=delete;//C++11
+};
+int main()
+{
+	Test t1;
+	//Test t2(t1);//错误
+	return 0;
+}
+#endif
+#if 0
+//饿汉模式,程序启动时，将对象创建好
+class Singleton
+{
+public:
+	static Singleton& GetInstrance()
+	{
+		return m_ins;
+	}
+private:
+	Singleton()
+	{}
+	static Singleton m_ins;//程序启动时对象创建好
+	Singleton(const Singleton&) = delete;
+	Singleton& operator=(Singleton const&) = delete;
+};
+Singleton Singleton::m_ins;//初始化
+int main()
+{
+	Singleton& s = Singleton::GetInstrance();
+	return 0;
+}
+#endif
+#if 0
+#include <mutex>
+#include <thread>
+//懒汉模式,第一次使用时创建，延迟加载
+//不是线程安全的，不能保证只能创建一个对象,因此实现加锁功能
+//容易造成线程阻塞,利用双判断
+//volatile作用是禁止编译器对代码发生指令重排
+class Singleton
+{
+public:
+	static volatile Singleton* GetInstrance()
+	{
+		if (nullptr == m_ins)//加一层检测，防止线程阻塞
+		{
+			m_mutex.lock();//加锁
+			if (nullptr == m_ins)//若为空，说明是第一次调用
+				m_ins = new Singleton;
+			m_mutex.unlock();//解锁
+		}
+		return m_ins;
+	}
+	class GC
+	{
+	public:
+		~GC()
+		{
+			if (m_ins)
+			{
+				delete m_ins;
+				m_ins = nullptr;
+			}
+		}
+	};
+	
+private:
+	Singleton()
+	{}
+
+	Singleton(const Singleton&) = delete;
+	static volatile Singleton* m_ins;
+	static mutex m_mutex;
+	static GC m_gc;
+	
+};
+volatile Singleton*  Singleton::m_ins = nullptr;
+mutex Singleton::m_mutex;
+Singleton::GC m_gc;
+void ThreadFunc()
+{
+	cout<<Singleton::GetInstrance()<<endl;
+}
+void TestSingleton()
+{
+	thread t1(ThreadFunc);
+	thread t2(ThreadFunc);
+	thread t3(ThreadFunc);
+	thread t4(ThreadFunc);
+	thread t5(ThreadFunc);
+	thread t6(ThreadFunc);
+	thread t7(ThreadFunc);
+	thread t8(ThreadFunc);
+	t1.join();
+	t2.join();
+	t3.join();
+	t4.join();
+	t5.join();
+	t6.join();
+	t7.join();
+	t8.join();
+}
+int main()
+{
+	TestSingleton();
+	return 0;
+}
+#endif
+#if 0
+void testfunc()
+{
+	FILE* pf = fopen("111.txt", "rb");
+	if (nullptr == pf)
+	{
+		throw 1;
+	}
+	fclose(pf);
+}
+void MemoryLeaks()
+{
+	// 1.内存申请了忘记释放
+	int* p1 = (int*)malloc(sizeof(int));
+	int* p2 = new int;
+	// 2.异常安全问题
+	int* p3 = new int[10];
+	testfunc();//这里Func函数抛异常
+	delete[] p3;
+	delete p2;
+	free(p1);
+}
+int main()
+{
+	try
+	{
+		MemoryLeaks();
+	}
+	catch (int err)
+	{
+		cout << err << endl;
+	}
+	return 0;
+}
+#endif
+//如何一次在堆上申请4G的内存？
+//在x64的环境下可以运行
+int main()
+{
+	void* p = new char[0xfffffffful];
+	cout << "new:" << p << endl;
 	return 0;
 }
