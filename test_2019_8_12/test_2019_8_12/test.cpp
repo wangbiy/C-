@@ -120,7 +120,7 @@ int main()
 	return 0;
 }
 #endif
-#if 1
+#if 0
 //¿Õ¸ñÌæ»»³É%20
 void show(char* string, int len)
 {
@@ -173,4 +173,89 @@ int main()
 	return 0;
 }
 #endif
+#if 0
+int main()
+{
+	int a = 5;
+	if (a = 0)
+	{
+		printf("%d", a - 10);
+	}
+	else
+	{
+		printf("%d", a++);
+	}
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char a[] = "hello\0world";
+	char b[15] = { 0 };
+	strcpy(b, a);
+	cout << strlen(b) << endl;
+	cout << sizeof(a) << endl;
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char a[20];
+	char* p1 = (char*)a;
+	char* p2 = (char*)(a + 5);
+	int n = p2 - p1;
+	cout << n;
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+#define F(X,Y) ((X)+(Y))
+int main()
+{
+	int a = 3;
+	int b = 4;
+	cout << F(a++, b++) << endl;
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int i = 1, sum = 0;
+	while (i < 10)
+	{
+		sum = sum + 1;
+		i++;
+	}
+	cout << i << sum << endl;
+	system("pause");
+	return 0;
+}
+#endif
+int fun(int x, int y)
+{
+	static int m = 0;
+	static int i = 2;
+	i += m + 1;
+	m = i + x + y;
+	return m;
+}
+int main()
+{
+	int j = 4;
+	int m = 1;
+	int k;
+	k = fun(j, m);
+	printf("%d,",k);
+	k = fun(j, m);
+	printf("%d\n", k);
+	system("pause");
+	return 0;
+}
 
