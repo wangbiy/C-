@@ -238,6 +238,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 int fun(int x, int y)
 {
 	static int m = 0;
@@ -255,6 +256,26 @@ int main()
 	printf("%d,",k);
 	k = fun(j, m);
 	printf("%d\n", k);
+	system("pause");
+	return 0;
+}
+#endif
+int x = 3;
+void fun()
+{
+	static int x = 1;
+	x *= (x + 1);
+	printf("%d\n", x);
+	return;
+}
+int main()
+{
+	int i;
+	for (i = 0; i < x; i++)
+	{
+		fun();
+	}
+	
 	system("pause");
 	return 0;
 }
