@@ -260,6 +260,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 int x = 3;
 void fun()
 {
@@ -279,4 +280,419 @@ int main()
 	system("pause");
 	return 0;
 }
+#endif
+#if 0
+int main()
+{
+	int i = 0;
+	int j = 0;
+	if ((++i > 0) || (++j > 0))
+		printf("%d %d\n", i, j);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int x = 0;
+	switch (++x)
+	{
+	case 0:++x;
+	case 1:++x;
+	case 2:++x;
+	}
+	printf("%d", x);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char s[] = "\\123456\123456\t";
+	cout << strlen(s) << endl;
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int s = 0, n;
+	for (n = 0; n < 4; ++n)
+	{
+		switch (n)
+		{
+		default:s += 4;
+		case 1:s += 1;
+		case 2:s += 2;
+		case 3:s += 3;
+		}
+	}
+	printf("%d\n", s);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char* a = "blue1";
+	char a1[] = "blue1";
+	cout << strlen(a) << endl;
+	cout << strlen(a1) << endl;
+	cout << sizeof(a) << endl;
+	cout << sizeof(a1) << endl;
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+void func(char sr[2])
+{
+	int m = sizeof(sr);
+	int n = strlen(sr);
+	printf("%d\n", m);
+	printf("%d\n", n);
+}
+int main()
+{
+	char str[] = "Hello";
+	func(str);
+	
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int find_half(int* arr, int size)
+{
+	int count = 0;
+	int temp;
+	for (int i = 0; i < size; ++i)
+	{
+		if (count == 0)
+		{
+			temp = arr[i];
+			count++;
+		}
+		if (arr[i] == temp)
+		{
+			count++;
+		}
+		else
+		{
+			count--;
+		}
+	}
+	return temp;
+}
+int main()
+{
+	int arr[] = { 1, 2, 3, 2, 2, 2, 5, 4, 2 };
+	int temp = find_half(arr, sizeof(arr) / sizeof(int));
+	printf("%d ", temp);
+	printf("\n");
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+union X{
+	int x;
+	char y[4];
+}a;
+int main()
+{
+	a.x = 0x11223344;
+	printf("%x\n", a.y[0]);
+	printf("%x\n", a.y[1]);
+	printf("%x\n", a.y[2]);
+	printf("%x\n", a.y[3]);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int a, x;
+	for (a = 0, x = 0; a <= 1 && !x++; a++)
+	{
+		a++;
+	}
+	printf("%d %d", a, x);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int a[5] = { 1, 2, 3, 4, 5 };
+	int* p1 = (int*)(&a + 1);
+	int* p2 = (int*)((int)a + 1);
+	int* p3 = (int*)(a + 1);
+	printf("%d %x %d\n", p1[-1], p2[0], p3[1]);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+//求子数组和
+int Find(int* arr, int size, int& temp)
+{
+	if (arr == NULL || size == 0)
+		return NULL;
+	int sum = temp = 0;
+	for (int i = 0; i < size; ++i)
+	{
+		sum += arr[i];
+		if (sum < 0)
+			sum = 0;
+		if (sum>temp)
+			temp = sum;
+	}
+	if (temp == 0)
+	{
+		temp = arr[0];
+		for (int i = 0; i < size; ++i)
+		{
+			if (arr[i]>temp)
+				temp = arr[i];
+		}
+	}
+	printf("%d\n", temp);
+}
+int main()
+{
+	int arr[] = { 1, -2, 3, 10, -4, 7, 2, -5 };
+	int num;
+	Find(arr, sizeof(arr) / sizeof(int), num);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char* str[3] = { "stra", "strb", "strc" };
+	char* p = str[0];
+	int i = 0;
+	while (i < 3)
+	{
+		printf("%s ", p++);
+		i++;
+	}
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+char* mystring()
+{
+	char buffer[6] = { 0 };
+	char* s = "Hello World";
+	for (int i = 0; i < sizeof(buffer)-1; i++)
+	{
+		buffer[i] = *(s + i);
+	}
+	return buffer;
+}
+int main()
+{
+	printf("%s\n", mystring());
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char a[1000];
+	int i;
+	for (i = 0; i < 1000; i++)
+	{
+		a[i] = (char)(-1 - i);
+	}
+	printf("%d", strlen(a));
+
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+//在字符串中找出第一个只出现一次的字符
+#include <assert.h>
+char Find(char* s)
+{
+	assert(s);
+	const  int arrsize = 256;
+	char arr[256];
+	for (int i = 0; i < arrsize; i++)
+	{
+		arr[i] = 0;
+	}
+	char* key = s;
+	while (*key != '\0')
+	{
+		arr[*(key++)]++;
+	}
+	key = s;
+	while (*key != '\0')
+	{
+		if (arr[*key] == 1)
+		{
+			return *key;
+		}
+		key++;
+	}
+	return '\0';
+}
+int main()
+{
+	char* str = "abaccdeff";
+	char ret = Find(str);
+	printf("%c\n", ret);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int fun(char* s)
+{
+	char* p = s;
+	while (*p != '\0')
+	{
+		p++;
+	}
+	return (p - s);
+}
+int main()
+{
+	printf("%d\n", fun("goodbye!"));
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	unsigned char a = 0xA5;
+	unsigned char b = ~a >> 4 + 1;
+	printf("%d\n", b);
+	system("pause");
+	return 0;
+}
+#endif 
+#if 0
+int main()
+{
+	const int i = 0;
+	int* j = (int*)&i;
+	*j = 1;
+	printf("%d %d", i, *j);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+//找到第一个重复出现的字符
+char Find(char* str)
+{
+	char arr[256] = { 0 };
+	char* key = str;
+	while (*key != '\0')
+	{
+		arr[*(key++)]++;
+	}
+	key=str;
+	while (*key != '\0')
+	{
+		if (arr[*key] >= 2)
+			return *key;
+		key++;
+	}
+	return '\0';
+}
+int main()
+{
+	char* str = "qywyer23tdd";
+	char ret = Find(str);
+	printf("%c\n", ret);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int f(int x, int y)
+{
+	int a = x&y;
+	int b = x^y;
+	return (a) + (b >> 1);
+}
+int main()
+{
+	int ret = f(2, 4);
+	printf("%d", ret);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+void sort(int arr[], int size)
+{
+	for (int i = 0; i < size - 1; ++i)
+	{
+		int flag = 1;
+		for (int j = 0; j < size - i - 1; ++j)
+		{
+			if (arr[j]>arr[j + 1])
+			{
+				int temp = arr[j];
+				arr[j] = arr[j + 1];
+				arr[j + 1] = temp;
+				flag = 0;
+			}
+		}
+		if (flag == 1)
+			break;
+	}
+}
+int Find(int*arr, int size, int* num)
+{
+	int count = 0;
+	for (int i = 0; i < size-1; i+=2)
+	{
+		if (arr[i] == arr[i + 1])
+		{
+			continue;
+		}
+		else if (count<2)
+		{
+				*num = arr[i];
+				i = i + 1;
+		}
+		count++;
+	}
+	return *num;
+}
+int main()
+{
+	int a[] = { 1, 3, 5, 7, 1, 3, 5, 9 };
+	sort(a, sizeof(a) / sizeof(int));
+	int num;
+	for (int i = 0; i<sizeof(a) / sizeof(int);++i)
+	{
+		printf("%d ", a[i]);
+	}
+	printf("\n");
+	Find(a, sizeof(a)/sizeof(int), &num);
+	printf("%d\n",num);
+	system("pause");
+	return 0;
+}
+#endif
+
 
