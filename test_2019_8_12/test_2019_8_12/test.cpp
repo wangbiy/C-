@@ -723,6 +723,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 int func()
 {
 	int i, j, k = 0;
@@ -738,4 +739,238 @@ int main()
 	system("pause");
 	return 0;
 }
+#endif 
+#if 0
+#define NUMBER 256
 
+void DeleteArr(char* str, char* del_str)
+{
+	bool flag[NUMBER];
+	char* slow = str;
+	char* fast = str;
+	int del_size = strlen(del_str);
+	if (NULL == str || NULL == del_str)
+	{
+		return;
+	}
+	for (int i = 0; i < NUMBER; ++i)
+	{
+		flag[i] = false;
+	}
+	for (int i = 0; i < del_size; ++i)
+	{
+		int pos = static_cast<int>(del_str[i]);//将要删除的字符标志为true
+		flag[pos] = true;
+	}
+	while (*fast)
+	{
+		if (flag[*fast]==false)
+		{
+			*slow = *fast;
+			slow++;
+			fast++;
+		}
+		fast++;
+	}
+	*slow = '\0';
+}
+int main()
+{
+	char* str = "They are students.";
+	char* del_str = "aeiou";
+	DeleteArr(str, del_str);
+	printf("%s\n", str);
+
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+struct student
+{
+	char name[10];
+	int age;
+	char gender;
+}std[3],*p=std;
+int main()
+{
+	scanf("%d", &(*p).age);
+	scanf("%c", &std[0].gender);
+	scanf("%c", &(p->gender));
+	scanf("%c", &std->name);
+
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int a = 2, *p1, **p2;
+	p2 = &p1;
+	p1 = &a;
+	a++;
+	printf("%d %d %d\n", a, *p1, **p2);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int k, j, s;
+	for (k = 2; k < 6; k++, k++)
+	{
+		s = 1;
+		for (j = k; j < 6; j++)
+		{
+			s += j;
+		}
+		printf("%d\n", s);
+	}
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int arr[] = { 6, 7, 8, 9, 10 };
+	int* ptr = arr;
+	int* a = ptr++;
+	*(a) += 123;
+	printf("%d %d", *ptr, *(++ptr));
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+//判断回文数
+bool isPalindrome(int x){
+	int temp;
+	long y = 0;
+	int start = x;
+	if (x<0){
+		return false;
+	}
+	else{
+		while (x != 0){
+			temp = x % 10;
+			x = x / 10;
+			y = temp + y * 10;
+		}
+		if (start == y){
+			return true;
+		}
+		return false;
+	}
+}
+int main()
+{
+	int n = 1211121;
+	if (isPalindrome(n) == true)
+		cout << "是回文数" << endl;
+	else if (isPalindrome(n) == false)
+		cout << "不是回文数" << endl;
+
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char a[] = "123456789",*p=a;
+	int i = 0;
+	while (*p)
+	{
+		if (i % 2 == 0)
+			*p = '!';
+		i++; p++;
+	}
+	puts(a);
+
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char str[] = "ABCDEFG";
+	char* p1, *p2;
+	p1 = "abcd";
+	p2 = "efgh";
+	strcpy(str + 1, p2 + 1);
+	strcpy(str + 3, p1 + 3);
+	printf("%s\n", str);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int fun(char* s1, char* s2)
+{
+	int i = 0;
+	while (s1[i] == s2[i] && s2[i] != '\0')
+		i++;
+	return (s1[i] == '\0'&&s2[i] == '\0');
+}
+int main()
+{
+	char* s1 = "avc";
+	char* s2 = "abc";
+	int ret=fun(s1, s2);
+	printf("%d\n", ret);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	unsigned int a = 0xFFFFFFF7;
+	unsigned char i = (unsigned char)a;
+	char* b = (char*)&a;
+	printf("%08x,%08x\n", i, *b);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int arr[] = { 1, 2, 3, 4, 5 };
+	int* ptr = (int*)(&arr + 1);
+	printf("%d %d\n", *(arr + 1), *(ptr - 1));
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	char ch = 'B' + '8' - '3';
+	cout<<ch<<endl;
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+double powHelper(double x, int n, double re)
+{
+	if (n == 0)
+		return 1 * re;
+	else if (n == 1)
+		return x * re;
+	else
+		return n % 2 == 0 ? powHelper(x * x, n / 2, re) : powHelper(x * x, n / 2, x * re);
+}
+
+double myPow(double x, int n)
+{
+	if (n < 0)
+		x = 1 / x;
+	return n % 2 == 0 ? powHelper(x * x, n / 2, 1) : powHelper(x * x, n / 2, x);
+}
+#endif
