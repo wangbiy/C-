@@ -957,20 +957,195 @@ int main()
 }
 #endif
 #if 0
-double powHelper(double x, int n, double re)
+//pow的模拟实现
+double myPow(double x, int n) 
 {
-	if (n == 0)
-		return 1 * re;
-	else if (n == 1)
-		return x * re;
-	else
-		return n % 2 == 0 ? powHelper(x * x, n / 2, re) : powHelper(x * x, n / 2, x * re);
+	double res = 1.0;
+	for (int i = n; i != 0; i /= 2)
+	{
+		if (i % 2 != 0)
+		{
+			res *= x;
+		}
+		x *= x;
+	}
+	return  n < 0 ? 1 / res : res;
 }
-
-double myPow(double x, int n)
+int main()
 {
-	if (n < 0)
-		x = 1 / x;
-	return n % 2 == 0 ? powHelper(x * x, n / 2, 1) : powHelper(x * x, n / 2, x);
+	double x = 2.00;
+	int n = 2;
+	double ret=myPow(x, n);
+	printf("%f\n", ret);
+	system("pause");
+	return 0;
 }
 #endif
+#if 0
+void foo(int b[][3])
+{
+	++b;
+	b[1][1] = 9;
+}
+int main()
+{
+	int a[3][3] = { { 1, 2, 3 }, { 4, 5, 6 }, { 7, 8, 9 } };
+	foo(a);
+	printf("%d", a[2][1]);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int x = 0, y = 0, z = 0;
+	z = (x == 1) && (y = 2);
+	printf("%d", y);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int i = 10;
+	long long t = sizeof(i++);
+	printf("%d", i);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+typedef struct//封装
+{
+	int x;
+	int y;
+	//表示这两个数的下标
+}T;
+T Arr;
+void FindK(int*a, int size, int k)
+{
+	int left = 0;
+	int right = size - 1;
+	int sum = 0;
+	while (left < right)
+	{
+		sum = a[left] + a[right];
+		if (sum < k)
+			left++;
+		else if (sum>k)
+			right--;
+		else
+		{
+			Arr.x = left;
+			Arr.y = right;
+			break;
+		}
+	}
+}
+int main()
+{
+	int arr[] = { 1, 2, 3, 4, 5, 6, 7, 8 ,9};
+	int k = 0;
+	int size = sizeof(arr) / sizeof(int);
+	printf("请输入k:");
+	scanf("%d", &k);
+	FindK(arr, size, k);
+	printf("%d %d\n", Arr.x, Arr.y);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+#define N 3
+#define Y(n) ((N+1)*n)
+int main()
+{
+	int z = 2 * (N + Y(5 + 1));
+	cout << z;
+
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int main()
+{
+	int i, x, y;
+	i = x = y = 0;
+	do
+	{
+		++i;
+		if (i % 2)
+			x += i,
+			i++;
+		y += i++;
+	} while (i <= 7);
+	printf("%d %d %d\n", i, x, y);
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+int fun(int a)
+{
+	int b = 0;
+	static int c = 3;
+	a = c++, b++;
+	return (a);
+}
+int main()
+{
+	int a = 2, i, k;
+	for (i = 0; i < 2; i++)
+	{
+		k = fun(a++);
+	}
+	printf("%d", k);
+	
+	system("pause");
+	return 0;
+}
+#endif
+#if 0
+//压缩字符串，例如：
+//"xxxyyyz"压缩为"3x4yz"
+void stringzip(char* str1, int len, char* str2)
+{
+	int j, n = 1, k = 0;//n表示重复的字符串中有几个字符
+	for (j = 1; j < len; j++)
+	{
+		if (str1[j - 1] == str1[j])
+		{
+			n++;
+			continue;
+		}
+		if (n>1)
+		{
+			str2[k] = n + '0';//数字放在前面，后面腾出字符的位置
+			str2[k + 1] = str1[j - 1];
+			k += 2;
+			n = 1;
+		}
+		else
+		{
+			str2[k] = str1[j - 1];
+			k++;
+			n = 1;
+		}
+	}
+	str2[j] = '\0';
+}
+int main()
+{
+	char str1[] = "xxxyyyyz";
+	char str2[30] = { 0 };
+	stringzip(str1, strlen(str1), str2);
+	cout << str2 << endl;
+
+	system("pause");
+	return 0;
+}
+#endif
+
