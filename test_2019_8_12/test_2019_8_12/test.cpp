@@ -1148,4 +1148,50 @@ int main()
 	return 0;
 }
 #endif
+//删除字符串首尾的空格，原来字符串的顺序不变，例如：
+//"     as    adadq     "变成"asadadq"
+void Deblank(char* str)
+{
+	int p = 0;
+	int i = 0;
+	int flag = 0;//代表还没开始处理空格
+	while (str[i] != '\0')
+	{
+		//遇到空格，还没开始处理
+		if (!flag&&str[i] == ' ')
+		{
+			i++;//往后走到不是空格的地方
+		}
+		else if (!flag&&str[i] != ' ')
+		{
+			str[p++] = str[i++];//不是空格的向前赋值
+		}
+		else if (flag&&str[i] == ' ')
+		{
+			flag = 0;//已经处理的就不处理了
+			str[p++] = str[i++];
+		}
+		else
+		{
+			str[p++] = str[i++];
+			flag = 1;//标记为已经处理了
+		}
+		
+	}
+	if (str[p - 1] == ' ')//结尾处多余空格
+	{
+		str[p - 1] = '\0';
+	}
+	else
+		str[p] = '\0';
+}
+int main()
+{
+	char str[] = "     as    adadq     ";
+	Deblank(str);
+	printf("%s", str);
+	printf("\n");
+	system("pause");
+	return 0;
+}
 
