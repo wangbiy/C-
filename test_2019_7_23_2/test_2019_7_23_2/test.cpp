@@ -87,6 +87,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 //КЏЪ§жиди
 //void func()
 //{}
@@ -102,5 +103,18 @@ char test(char a){
 int main()
 {
 	system("pause");
+	return 0;
+}
+#endif
+void TestFunc(int a = 10)
+{
+	cout << "void TestFunc(int)" << endl;
+}
+void TestFunc(int a)
+{
+	cout << "void TestFunc(int)" << endl;
+}
+int main()
+{
 	return 0;
 }
