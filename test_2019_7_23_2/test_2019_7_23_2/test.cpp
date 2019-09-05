@@ -106,6 +106,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 void TestFunc(int a = 10)
 {
 	cout << "void TestFunc(int)" << endl;
@@ -118,3 +119,48 @@ int main()
 {
 	return 0;
 }
+#endif
+#if 0
+void F(int a)
+{}
+int F(int a)
+{}
+//错误，返回值不是判断标准，参数完全相同，函数名字相同，报错
+int main()
+{
+	return 0;
+}
+#endif
+#if 0
+void F(int a)
+{}
+int F(int a, int)
+{}
+int main()
+{
+	return 0;
+}
+#endif
+#if 0
+void F(int a, int c = 0)
+{}
+void F(int a, int)
+{}
+int main()
+{
+	return 0;
+}
+#endif
+#if 0
+void F(int a)
+{}
+void F(int a, int c = 0)
+{}
+//构成重载,调用存在二义性
+
+int main()
+{
+	return 0;
+}
+#endif
+
