@@ -343,7 +343,8 @@ int main()
 	cout << endl;
 	return 0;
 }
-#endif
+#endif 
+#if 0
 //判断一个字符串是否是回文，只要数字或者字母，其他字符忽略
 class S
 {
@@ -396,6 +397,64 @@ int main()
 		cout << "是回文" << endl;
 	else
 		cout << "不是回文" << endl;
+	system("pause");
+	return 0;
+}
+#endif
+//给定两个字符串形式的非负整数 num1 和num2，计算它们的和
+class Solution
+{
+public:
+	Solution(const char* c1, const char* c2)
+		: num1(c1)
+		, num2(c2)
+	{}
+	string addStrings()
+	{
+		int Lsize = num1.size();
+		int Rsize = num2.size();
+		if (Lsize<Rsize)//保证左操作数比右操作数位数多
+		{
+			num1.swap(num2);
+			swap(Lsize, Rsize);
+		}
+		char step = 0;//表示进位
+		string strRet(Lsize + 1, '0');//结果应该比长的左操作数多了一位
+		//以num1的字符个数作为循环上限
+		for (int idxL = Lsize - 1, idxR = Rsize - 1; idxL >= 0; --idxL, --idxR)
+		{
+
+			char cRet = num1[idxL] - '0' + step;
+			//每一位的相加，但是是字符，转换为数字，结果可能超过10，需要进位
+			if (idxR >= 0)
+				cRet += num2[idxR] - '0';
+			step = 0;//将上一次进位清0
+			if (cRet >= 10)
+			{
+				step = 1;
+				cRet -= 10;
+			}
+			strRet[idxL + 1] += cRet;//最低位加上cRet     
+		}
+		if (step == 1)//如果最后一次要进位
+			strRet[0] += 1;
+		else//否则删除多出来的那一位
+			strRet.erase(strRet.begin());
+		return strRet;
+	}
+private:
+	string num1;
+	string num2;
+};
+int main()
+{
+	Solution s1("111", "33");
+	string ret = s1.addStrings();
+	for (size_t i = 0; i < ret.size(); ++i)
+	{
+		cout << ret[i];
+	}
+	cout << endl;
 	system("pause");
 	return 0;
 }
