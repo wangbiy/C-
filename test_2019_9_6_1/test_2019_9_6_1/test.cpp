@@ -276,7 +276,7 @@ int main()
 	return 0;
 }
 #endif
-#if 1
+#if 0
 //寻找字符串中第一个只出现一次的字符,返回下标
 class S
 {
@@ -310,3 +310,92 @@ int main()
 	return 0;
 }
 #endif
+#if 0
+//翻转字符串
+class S
+{
+public:
+	S(const char* c)
+	:s(c)
+	{}
+	string reverseString()
+	{
+		if (s.empty())
+			return s;
+		size_t start = 0;
+		size_t end = s.size() - 1;
+		while (start < end)
+		{
+			swap(s[start], s[end]);
+			++start;
+			--end;
+		}
+		return s;
+	}
+private:
+	string s;
+};
+int main()
+{
+	S s1("hello");
+	string s2=s1.reverseString();
+	cout << s2;
+	cout << endl;
+	return 0;
+}
+#endif
+//判断一个字符串是否是回文，只要数字或者字母，其他字符忽略
+class S
+{
+public:
+	S(const char* c)
+		:s(c)
+	{}
+	bool LetterOrNumber(char ch)
+	{
+		return (ch >= '0'&&ch <= '9')
+			|| (ch >= 'a'&&ch <= 'z')
+			|| (ch >= 'A'&&ch <= 'Z');
+	}
+	bool isPalindrome()
+	{
+		for (auto& ch : s)//将小写字母转换为大写
+		{
+			if (ch >= 'a'&&ch <= 'z')
+				ch -= 32;
+		}
+		int begin = 0;
+		int end = s.size() - 1;
+		while (begin < end)
+		{
+			while (begin < end&&!LetterOrNumber(s[begin]))
+			{
+				++begin;
+			}
+			while (begin < end&&!LetterOrNumber(s[end]))
+			{
+				--end;
+			}
+			if (s[begin] != s[end])
+				return false;
+			else
+			{
+				++begin;
+				--end;
+			}
+		}
+		return true;
+	}
+private:
+	string s;
+};
+int main()
+{
+	S s1("a bba cddc");
+	if (s1.isPalindrome() == true)
+		cout << "是回文" << endl;
+	else
+		cout << "不是回文" << endl;
+	system("pause");
+	return 0;
+}
