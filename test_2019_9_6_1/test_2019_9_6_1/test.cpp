@@ -264,6 +264,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 int main()
 {
 	string s1("hello");
@@ -274,3 +275,38 @@ int main()
 		cout << s2 << endl;
 	return 0;
 }
+#endif
+#if 1
+//寻找字符串中第一个只出现一次的字符,返回下标
+class S
+{
+public:
+	S(const char* c)//构造函数
+	:s (c)
+	{}
+	int FirstUniqChar()
+	{
+		int count[256] = { 0 };
+		int size = s.size();
+		for (int i = 0; i < size; ++i)
+		{
+			count[s[i]] += 1;
+		}
+		for (int i = 0; i < size; ++i)
+		{
+			if (1 == count[s[i]])
+				return i;
+		}
+		return -1;
+	}
+private:
+	string s;
+};
+int main()
+{
+	S s1("aaacvccbnnmj");
+	int ret=s1.FirstUniqChar();
+	cout << ret << endl;
+	return 0;
+}
+#endif
