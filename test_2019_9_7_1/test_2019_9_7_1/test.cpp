@@ -133,7 +133,10 @@ namespace bit
 		//深拷贝，即给每个对象分配资源
 		string(const string& s)//拷贝构造函数
 			: _str(nullptr)
-		{
+			//例如：string s3(s1),因为pTemp创建了一个和s1相同的空间，相同的内容
+			//pTemp与s3交换后，s3指向了pTemp指向的内容，而pTemp指向的原本s3指向的内容
+			//也就是随机值，出了该作用域后，析构函数进行清理工作，pTemp的_str进行释放，
+		{	//此时是对随机值进行释放（也就是释放野指针，会崩溃），因此在这里给s3的_str初始化为nullptr
 			string pTemp(s._str);//构造一个临时对象
 			swap(_str, pTemp._str);
 		}
@@ -256,6 +259,7 @@ int main()
 	return 0;
 }
 #endif
+#if 0
 //可以使用指针来解决
 namespace bit
 {
@@ -333,3 +337,94 @@ int main()
 	//所以就有了写时拷贝
 	return 0;
 }
+#endif
+//写时拷贝:浅拷贝+引用计数+在修改对象时分离对象
+#if 1
+namespace bit
+{
+	class string
+	{
+	public:
+		string(const char* str = "")
+		{
+			if (str == nullptr)
+				str = "";
+			else
+			{
+				_str = new char[strlen(str) + 1];
+				strcpy(_str, str);
+				_pCount = new int(1);
+			}
+		}
+		string(string& s)
+			:_str(s._str)
+			, _pCount(s._pCount)
+		{
+			++(*_pCount);
+
+		}
+		~string()
+		{
+			Release();
+		}
+		string& operator=(const string& s)
+		{
+			if (this != &s)
+			{
+				Release();
+				_str = s._str;
+				_pCount = s._pCount;
+				++(*_pCount);
+			}
+			return *this;
+		}
+		void Swap(string& s)
+		{
+			swap(_str, s._str);
+			swap(_pCount, s._pCount);
+		}
+		char& operator[](size_t index)
+		{
+			if (*_pCount > 1)//有对象共享一个空间
+			{
+				//分离
+				string strTemp(_str);
+				Swap(strTemp);
+			}
+			return _str[index];
+		}
+		const char& operator[](size_t index)const
+		{
+			return _str[index];
+		}
+	private:
+		void Release()
+		{
+			if (_str && 0 == --(*_pCount))
+			{
+				delete[]_str;
+				delete _pCount;
+				_str = nullptr;
+				_pCount = nullptr;
+			}
+		}
+	private:
+		char* _str;
+		int* _pCount;
+	};
+}
+int main()
+{
+	bit::string s1("hello");
+	bit::string s2(s1);
+	//共用一份空间
+	bit::string s3("world");
+	bit::string s4(s3);
+	//共用一份空间
+	/*s1 = s3;
+	s2 = s4;*/
+	s1[0] = 'w';
+	return 0;
+}
+#endif
+
