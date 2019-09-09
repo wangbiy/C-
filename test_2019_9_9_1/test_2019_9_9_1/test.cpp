@@ -18,13 +18,14 @@ void Test2()
 	cout << s1 << endl;
 	cout << s1.size() << endl;
 	cout << s1.capacity() << endl;
-	auto it = s1.begin();
+	/*auto it = s1.begin();
 	while (it != s1.end())
 	{
 		cout << *it;
 		++it;
-	}
-	cout << endl;
+	}*/
+	//cout << endl;
+	s1.PushBack("***");
 	s1.Popback();
 	s1.Pushfront('a');
 	s1.Popfront();

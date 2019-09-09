@@ -13,6 +13,20 @@ void String::Pushback(char ch)//Î²²åÒ»¸ö×Ö·û
 	_str[_size++] = ch;
 	_str[_size] = '\0';
 }
+void String::PushBack(const char* str)
+{
+	size_t str_size = strlen(str);
+	if (_size + str_size == _capacity)
+	{
+		_capacity += str_size;
+		reserve(_capacity);
+	}
+	while (*str != '\0')
+	{
+		_str[_size++] = *str++;
+	}
+	_str[_size] = '\0';
+}
 void String::Popback()
 {
 	if (_size == 0)

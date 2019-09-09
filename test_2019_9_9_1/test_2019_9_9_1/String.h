@@ -74,9 +74,8 @@ public:
 		}
 		return *this;
 	}
-
-
 	void Pushback(char ch);
+	void PushBack(const char* str);
 	void Popback();
 	void Pushfront(char ch);
 	void Pushfront(const char* str);
