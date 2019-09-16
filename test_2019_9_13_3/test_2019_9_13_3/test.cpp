@@ -1,3 +1,4 @@
+#if 0
 #include <iostream>
 using namespace std;
 #include <list>
@@ -67,3 +68,4 @@ int main()
 	system("pause");
 	return 0;
 }
+#endif
