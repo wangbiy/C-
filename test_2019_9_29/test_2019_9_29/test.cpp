@@ -343,3 +343,86 @@ int main()
 	return 0;
 }
 #endif
+#if 0
+void Testfunc()throw(int)
+{
+	throw 1.0;
+}
+#endif
+#if 0
+void Func()
+{
+	char* p = nullptr;
+	p = new char[0x7fffffff];
+}
+int main()
+{
+	try
+	{
+		Func();
+	}
+	catch (const std::exception& e)
+	{
+		e.what();
+		return 0;
+	}
+	return 0;
+}
+#endif
+#if 0
+#include <string>
+class Exception
+{
+public:
+	Exception(size_t errID, const string& errInfo)
+		:_errID(errID)
+		, _errInfo(errInfo)
+	{}
+	virtual void What()const = 0;//具体不知道异常
+protected:
+	size_t _errID;
+	string _errInfo;
+};
+class DBException:public Exception
+{
+public:
+	DBException(size_t errID, const string& errInfo)
+		:Exception(errID, errInfo)
+	{}
+	virtual void What()const
+	{
+		cout << _errID << "--->" << _errInfo << endl;
+	}
+};
+void Func1()
+{
+	DBException e(404,"网络不通");
+	throw e;
+}
+void Func2()
+{
+	DBException e(504, "数据库未打开");
+	throw e;
+}
+int main()
+{
+	try
+	{
+		Func1();
+		Func2();
+	}
+	catch (const Exception& e)//采取基类引用的方式来捕获
+	{
+		e.What();
+	}
+	catch (const exception& e)//库里的捕获
+	{
+		e.what();
+	}
+	catch (...)
+	{
+		cout << "未知异常" << endl;
+	}
+	return 0;
+}
+#endif
