@@ -367,6 +367,7 @@ int main()
 }
 #endif
 #if 0
+#include <mutex>
 template <class T>
 class DFDel
 {
@@ -412,6 +413,7 @@ namespace bite
 		shared_ptr(T* ptr = nullptr)
 			:_ptr(ptr)
 			, pcount(nullptr)
+			, _pMutex(new mutex)
 		{
 			if (ptr)
 			{
@@ -425,11 +427,9 @@ namespace bite
 		shared_ptr(shared_ptr<T>& sp)
 			:_ptr(sp._ptr)
 			, pcount(sp.pcount)
+			, _pMutex(sp._pMutex)
 		{
-			if (_ptr)
-			{
-				++(*pcount);
-			}
+			AddRefCount();
 		}
 		//sp1=sp2
 		//sp1:未管理资源---直接与sp2共享
@@ -443,10 +443,10 @@ namespace bite
 				//未管理资源，与sp共享
 				_ptr = sp._ptr;
 				pcount = sp.pcount;
+				_pMutex = sp._pMutex;
 
 				//已经与其他对象共享资源
-				if (_ptr)
-					++(*pcount);
+				AddRefCount();
 			}
 			return *this;
 		}
@@ -465,6 +465,7 @@ namespace bite
 	private:
 		void Release()
 		{
+			_pMutex->lock();
 			if (_ptr && 0 == --(*pcount))
 			{
 				//别把这里写死
@@ -475,18 +476,146 @@ namespace bite
 				DF df;
 				df(_ptr);
 				delete pcount;
+				delete _pMutex;
 			}
-
+			_pMutex->unlock();
+		}
+		void AddRefCount()//对计数加锁
+		{
+			_pMutex->lock();
+			if (_ptr)
+				++(*pcount);
+			_pMutex->unlock();
 		}
 		T* _ptr;
 		int* pcount;
+		mutex* _pMutex;
 	};
 }
+//void Test()
+//{
+//	//bite::shared_ptr<int,Free<int>> sp1((int*)malloc(sizeof(int)* 10));
+//	//bite::shared_ptr<FILE,Fclose> sp2(fopen("111.txt", "rb"));
+//	//bite::shared_ptr<int> sp3(new int[10]);//一般不会有这种情况
+//	bite::shared_ptr<int> sp4(new int); 
+//}
+class Date
+{
+public:
+	Date()
+	{
+		_year = _month = _day = 0;
+	}
+	int _year;
+	int _month;
+	int _day;
+};
+void SharePtrFunc(bite::shared_ptr<Date>& sp, size_t n) 
+{
+	for (size_t i = 0; i < n; ++i)
+	{
+		// 这里智能指针拷贝会++计数，智能指针析构会--计数，这里是线程安全的。
+		bite::shared_ptr<Date> copy(sp);
+		copy->_year++;
+		copy->_month++;
+		copy->_day++;
+	}
+}
+#include <thread>
 int main()
 {
-	bite::shared_ptr<int> sp1((int*)malloc(sizeof(int)* 10));
-    //bite::shared_ptr<FILE> sp2(fopen("111.txt", "rb"));
-	//bite::shared_ptr<int> sp3(new int[10]);//一般不会有这种情况
+	bite::shared_ptr<Date> p(new Date);
+	const size_t n = 10000;
+	thread t1(SharePtrFunc, p, n);
+	thread t2(SharePtrFunc, p, n);//创建t1、t2两个线程对象
+	//两个线程往下跑，主线程也在跑，当遇到t1.join(),主线程等待
+	t1.join();
+	t2.join();
+	//这时t1和t2已经跑完了，主线程开始
+	cout << p->_year << endl;
+	cout << p->_month << endl;
+	cout << p->_day << endl;
 	return 0;
 }
 #endif
+#if 0
+//shared_ptr循环引用问题
+#include <memory>
+struct ListNode
+{
+	ListNode(int data = int())
+	:_pPre(nullptr)
+	, _pNext(nullptr)
+	,_data(data)
+	{
+		cout << "ListNode::ListNode(int)" << this << endl;
+	}
+	~ListNode()
+	{
+		cout << "ListNode::~ListNode()" << this << endl;
+	}
+	shared_ptr<ListNode> _pPre;
+	shared_ptr<ListNode> _pNext;
+	int _data;
+};
+void Test()
+{
+	shared_ptr<ListNode> sp1(new ListNode(10));
+	shared_ptr<ListNode> sp2(new ListNode(20));
+	cout << sp1.use_count() << endl;//引用计数
+	cout << sp2.use_count() << endl;
+
+	sp1->_pNext = sp2;
+	sp2->_pPre = sp1;
+	cout << sp1.use_count() << endl;//引用计数
+	cout << sp2.use_count() << endl;
+}
+int main()
+{
+	Test();
+	return 0;
+}
+#endif
+#if 0
+//weak_ptr
+#include <memory>
+int main()
+{
+	//weak_ptr<int> wp(new int);//报错
+	return 0;
+}
+#endif
+//weak_ptr解决shared_ptr的循环引用问题
+#include <memory>
+struct ListNode
+{
+	ListNode(int data = int())
+	:_data(data)
+	{
+		cout << "ListNode::ListNode(int)" << this << endl;
+	}
+	~ListNode()
+	{
+		cout << "ListNode::~ListNode()" << this << endl;
+	}
+	weak_ptr<ListNode> _pPre;
+	weak_ptr<ListNode> _pNext;
+	int _data;
+};
+void Test()
+{
+	shared_ptr<ListNode> sp1(new ListNode(10));
+	shared_ptr<ListNode> sp2(new ListNode(20));
+	cout << sp1.use_count() << endl;//引用计数
+	cout << sp2.use_count() << endl;
+
+	sp1->_pNext = sp2;
+	sp2->_pPre = sp1;
+	cout << sp1.use_count() << endl;//引用计数
+	cout << sp2.use_count() << endl;
+}
+int main()
+{
+	Test();
+	return 0;
+}
