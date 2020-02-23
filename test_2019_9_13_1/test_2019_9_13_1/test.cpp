@@ -2,18 +2,18 @@
 #include <iostream>
 using namespace std;
 #include <assert.h>
-template<class T>//Ä£°å²ÎÊıÁĞ±í
+template<class T>//æ¨¡æ¿å‚æ•°åˆ—è¡¨
 class Vector
 {
 public:
 	typedef T* iterator;
 public:
-	Vector()//¹¹ÔìÎŞ²Îº¯Êı
+	Vector()//æ„é€ æ— å‚å‡½æ•°
 		: _start(nullptr)
 		, _finish(nullptr)
 		, _endofStorage(nullptr)
 	{}
-	Vector(size_t n, const T& data = T())//·ÅÈën¸öÎªdataµÄÔªËØ
+	Vector(size_t n, const T& data = T())//æ”¾å…¥nä¸ªä¸ºdataçš„å…ƒç´ 
 		:_start(new T[n])
 		, _finish(_start + n)
 		, _endofStorage(_finish)
@@ -23,7 +23,7 @@ public:
 			_start[i] = data;
 		}
 	}
-	Vector(T* first, T* last)//·¶Î§
+	Vector(T* first, T* last)//èŒƒå›´
 	{
 		size_t size = last - first;
 		_start = new T[size];
@@ -33,7 +33,7 @@ public:
 		}
 		_finish = _endofStorage = _start + size;
 	}
-	Vector(const Vector<T>& v)//¿½±´¹¹Ôìº¯Êı
+	Vector(const Vector<T>& v)//æ‹·è´æ„é€ å‡½æ•°
 	{
 		size_t size = v.size();
 		_start = new T[size];
@@ -43,18 +43,18 @@ public:
 		}
 		_finish = _endofStorage = _start + size;
 	}
-	Vector<T>& operator=(const Vector<T> & v)//¸³ÖµÔËËã·ûÖØÔØ
+	Vector<T>& operator=(const Vector<T> & v)//èµ‹å€¼è¿ç®—ç¬¦é‡è½½
 	{
 		Swap(v);
 		return *this;
 	}
-	void Swap(Vector<T> &v)//½»»»º¯Êı
+	void Swap(Vector<T> &v)//äº¤æ¢å‡½æ•°
 	{
-		std::vector(_start, v._start);
-		std::vector(_finish, v._finish);
-		std::vector(_endofStorage, v._endofStorage);
+		std::swap(_start, v._start);
+		std::swap(_finish, v._finish);
+		std::swap(_endofStorage, v._endofStorage);
 	}
-	~Vector()//Îö¹¹º¯Êı
+	~Vector()//ææ„å‡½æ•°
 	{
 		if (_start)
 		{
@@ -79,8 +79,8 @@ public:
 	}
 	void resize(size_t newsize, const T& data = T())
 	{
-		size_t oldsize = size();//Ô­À´¿Õ¼ä´óĞ¡
-		if (newsize <= oldsize)//ËõĞ¡
+		size_t oldsize = size();//åŸæ¥ç©ºé—´å¤§å°
+		if (newsize <= oldsize)//ç¼©å°
 		{
 			_finish = _start + newsize;
 		}
@@ -89,7 +89,7 @@ public:
 			size_t oldcapacity = capacity();
 			if (newsize >= oldcapacity)
 			{
-				reserve(newsize);//À©Èİ
+				reserve(newsize);//æ‰©å®¹
 			}
 			for (size_t i = oldsize; i < newsize; ++i)
 			{
@@ -102,18 +102,18 @@ public:
 		size_t oldcapacity = capacity();
 		if (oldcapacity < newcapacity)
 		{
-			//À©Èİ
+			//æ‰©å®¹
 			T* temp = new T[newcapacity];
 			if (_start)
 			{
 				size_t originSize = size();
 				for (size_t i = 0; i < originSize; ++i)
 				{
-					temp[i] = _start[i];//½«_startÖĞµÄÔªËØ·ÅÈëtemp
+					temp[i] = _start[i];//å°†_startä¸­çš„å…ƒç´ æ”¾å…¥temp
 				}
 				delete[]_start;
 				_start = temp;
-				_finish = _start + originSize;//ÕâÊ±ºò²»ÄÜÖ±½Ó+size()£¬ÒòÎªÕâÊ±size()¼ÆËãµÄÊÇÏÖÔÚµÄsize
+				_finish = _start + originSize;//è¿™æ—¶å€™ä¸èƒ½ç›´æ¥+size()ï¼Œå› ä¸ºè¿™æ—¶size()è®¡ç®—çš„æ˜¯ç°åœ¨çš„size
 				_endofStorage = _start + newcapacity;
 			}
 		}
@@ -153,8 +153,8 @@ public:
 		return _finish;
 	}
 
-//ĞŞ¸Ä
-	void PushBack(const T data)
+//ä¿®æ”¹
+	void PushBack(const T& data)
 	{
 		if (_finish == _endofStorage)
 		{
@@ -169,7 +169,7 @@ public:
 			return;
 		--_finish;
 	}
-	iterator Insert(iterator pos, const T data)
+	iterator Insert(iterator pos, const T& data=T())
 	{
 		assert(pos <= _finish);
 		size_t index = pos - _start;
@@ -178,7 +178,7 @@ public:
 			reserve(2 * capacity());
 			pos = _start + index;
 		}
-		//°áÒÆÔªËØ
+		//æ¬ç§»å…ƒç´ 
 		for (int i = size() - 1; i >= pos - _start; --i)
 		{
 			_start[i + 1] = _start[i];
@@ -189,7 +189,7 @@ public:
 	}
 	iterator Erase(iterator pos)
 	{
-		//°áÒÆÔªËØ
+		//æ¬ç§»å…ƒç´ 
 		iterator cur = pos;
 		iterator curNext = cur + 1;
 		while (curNext != _finish)
@@ -201,24 +201,15 @@ public:
 	}
 	void clear()
 	{
-		_finish = _strat;
+		_finish = _start;
 	}
-	size_t Find(T& x)
-	{
-		size_t cur = 0;
-		while (cur < size())
-		{
-			if (_start[cur] == x)
-				return cur;
-		}
-		return -1;
-	}
+	
 private:
 	/*T* _array;
 	size_t _capacity;
 	size_t _size;*/
-	iterator _start;//ÆğÊ¼Î»ÖÃ
-	iterator _finish;//ÀàËÆÓÚ_size,×îºóÒ»¸öÔªËØµÄÏÂÒ»¸öÎ»ÖÃ
+	iterator _start;//èµ·å§‹ä½ç½®
+	iterator _finish;//ç±»ä¼¼äº_size,æœ€åä¸€ä¸ªå…ƒç´ çš„ä¸‹ä¸€ä¸ªä½ç½®
 	iterator _endofStorage;
 };
 void Print(Vector<int>& v)
@@ -265,7 +256,7 @@ void Test2()
 	cout << v.size() << endl;
 	cout << v.capacity() << endl;
 
-	v.resize(20, 6);//ĞèÒªÀ©Èİ
+	v.resize(20, 6);//éœ€è¦æ‰©å®¹
 	Print(v);
 	cout << v.size() << endl;
 	cout << v.capacity() << endl;
